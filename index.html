@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0a0a12;
+            --bg-darker: #07070e;
+            --card-bg: #141420;
+            --spotify: #1DB954; /* Spotify green */
+            --text: #f0f0f0;
+            --text-dim: rgba(255, 255, 255, 0.7);
+            --snapchat: #FFFC00;
+            --youtube: #FF0000;
+            --soundcloud: #FF7700;
+            --instagram: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            --glow: 0 0 15px rgba(29, 185, 84, 0.5); /* Spotify green glow */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--bg-dark), var(--bg-darker));
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            background: var(--spotify);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        /* Main grid layout */
+        .hub-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            max-width: 900px;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* Social link cards */
+        .hub-card {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 2;
+        }
+        
+        /* Spotify card gets special treatment */
+        .spotify-card {
+            border: 1px solid var(--spotify);
+            box-shadow: var(--glow), 0 10px 40px rgba(0, 0, 0, 0.4);
+            animation: spotify-pulse 2s infinite alternate;
+        }
+        
+        @keyframes spotify-pulse {
+            0% { box-shadow: 0 0 15px rgba(29, 185, 84, 0.5), 0 10px 40px rgba(0, 0, 0, 0.4); }
+            100% { box-shadow: 0 0 30px rgba(29, 185, 84, 0.8), 0 15px 50px rgba(0, 0, 0, 0.6); }
+        }
+        
+        /* Hover effects */
+        .hub-card:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: var(--glow), 0 15px 50px rgba(0, 0, 0, 0.5);
+            z-index: 20;
+        }
+        
+        /* Platform icons */
+        .hub-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            transition: all 0.3s ease-out;
+            position: relative;
+        }
+        
+        .hub-card:hover .hub-icon {
+            transform: scale(1.2) translateY(-5px);
+        }
+        
+        /* Platform labels */
+        .hub-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+        
+        .hub-card:hover .hub-label {
+            opacity: 1;
+            transform: translateY(3px);
+        }
+        
+        /* Platform-specific colors */
+        .snapchat { color: var(--snapchat); }
+        .youtube { color: var(--youtube); }
+        .soundcloud { color: var(--soundcloud); }
+        .spotify { color: var(--spotify); }
+        .instagram { 
+            background: var(--instagram);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Animated background elements */
+        .floating-shape {
+            position: absolute;
+            filter: blur(60px);
+            opacity: 0.1;
+            animation: float 15s infinite ease-in-out;
+            z-index: 1;
+        }
+        
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--spotify);
+            top: 10%;
+            left: 5%;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        }
+        
+        .shape-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--youtube);
+            bottom: 5%;
+            right: 10%;
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50px, 50px) rotate(5deg); }
+            50% { transform: translate(-30px, 70px) rotate(-5deg); }
+            75% { transform: translate(30px, -50px) rotate(5deg); }
+        }
+        
+        /* Hover shine effect */
+        .hub-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transition: all 0.7s ease;
+        }
+        
+        .hub-card:hover::after {
+            left: 150%;
+        }
+        
+        /* Cursor follower */
+        .cursor-follower {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(29, 185, 84, 0.3); /* Spotify green */
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: screen;
+            z-index: 9999;
+            transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hub-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background elements -->
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+    
+    <!-- Cursor follower -->
+    <div class="cursor-follower" id="cursorFollower"></div>
+    
+    <!-- Main hub container -->
+    <div class="hub-container">
+        <!-- Spotify (Special Card) -->
+        <a href="https://open.spotify.com/user/31hpyw6owjbremc7xpuzb3zyx4lu?si=12d1a99c00054213" class="hub-card spotify-card" target="_blank">
+            <i class="fab fa-spotify hub-icon spotify"></i>
+            <span class="hub-label">Spotify</span>
+        </a>
+        
+        <!-- Snapchat -->
+        <a href="https://snapchat.com/t/bdTomwb2" class="hub-card" target="_blank">
+            <i class="fab fa-snapchat-ghost hub-icon snapchat"></i>
+            <span class="hub-label">Snapchat</span>
+        </a>
+        
+        <!-- YouTube -->
+        <a href="https://www.youtube.com/@Jaeliss" class="hub-card" target="_blank">
+            <i class="fab fa-youtube hub-icon youtube"></i>
+            <span class="hub-label">YouTube</span>
+        </a>
+        
+        <!-- SoundCloud -->
+        <a href="https://on.soundcloud.com/TrLhjmWwrWD3wTVF7" class="hub-card" target="_blank">
+            <i class="fab fa-soundcloud hub-icon soundcloud"></i>
+            <span class="hub-label">SoundCloud</span>
+        </a>
+        
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/2dryyy/" class="hub-card" target="_blank">
+            <i class="fab fa-instagram hub-icon instagram"></i>
+            <span class="hub-label">Instagram</span>
+        </a>
+        
+        <!-- Extra slot -->
+        <a href="#" class="hub-card" style="background: rgba(29, 185, 84, 0.1); border: 1px dashed var(--spotify);">
+            <i class="fas fa-plus hub-icon" style="color: var(--spotify);"></i>
+            <span class="hub-label">More Soon</span>
+        </a>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const colors = ['#1DB954', '#ffffff', '#00ffaa', '#ff7700']; // Spotify green added
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random properties
+                const size = Math.random() * 5 + 2;
+                const posX = Math.random() * window.innerWidth;
+                const posY = Math.random() * window.innerHeight;
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 5;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}px`;
+                particle.style.top = `${posY}px`;
+                particle.style.background = color;
+                particle.style.opacity = Math.random() * 0.5 + 0.1;
+                particle.style.animation = `float-particle ${duration}s linear ${delay}s infinite`;
+                
+                document.body.appendChild(particle);
+            }
+            
+            // Add the animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes float-particle {
+                    0% { transform: translate(0, 0) scale(1); opacity: 0.1; }
+                    50% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) scale(1.2); opacity: 0.6; }
+                    100% { transform: translate(0, 0) scale(1); opacity: 0.1; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Cursor follower effect
+        const cursorFollower = document.getElementById('cursorFollower');
+        document.addEventListener('mousemove', (e) => {
+            cursorFollower.style.left = `${e.clientX}px`;
+            cursorFollower.style.top = `${e.clientY}px`;
+            
+            // Scale up when hovering cards
+            if (e.target.closest('.hub-card')) {
+                cursorFollower.style.width = '40px';
+                cursorFollower.style.height = '40px';
+                cursorFollower.style.background = 'rgba(29, 185, 84, 0.5)'; // Spotify green
+            } else {
+                cursorFollower.style.width = '20px';
+                cursorFollower.style.height = '20px';
+                cursorFollower.style.background = 'rgba(29, 185, 84, 0.3)'; // Lighter green
+            }
+        });
+        
+        // Initialize when page loads
+        window.addEventListener('load', () => {
+            createParticles();
+            
+            // Animate cards in sequentially
+            const cards = document.querySelectorAll('.hub-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.animation = `cardEntrance 0.5s ease-out ${index * 0.1}s forwards`;
+            });
+            
+            // Add the animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes cardEntrance {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>
